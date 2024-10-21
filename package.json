@@ -4,7 +4,8 @@
   "description": "User Authentication Service for Venu",
   "main": "dist/index.js",
   "scripts": {
-    "test": "jest",
+    "unit-test": "jest unit_tests",
+    "int-test": "jest integration_tests",
     "start": "ts-node src/index.ts",
     "build": "tsc",
     "lint": "eslint . --ext .ts",

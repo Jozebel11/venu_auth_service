@@ -1,6 +1,5 @@
 // src/controllers/authController.ts
 import { Request, Response, NextFunction } from 'express';
-import User from '../models/User';
 
 export const loginSuccess = (req: Request, res: Response) => {
     if (req.user) {
