@@ -1,7 +1,6 @@
 import mongoose, { Schema, Document, Model } from 'mongoose';
 
 export interface IUser extends Document {
-    id: string;
     googleId?: string;
     facebookId?: string;
     appleId?: string;
@@ -19,7 +18,7 @@ const UserSchema: Schema<IUser> = new Schema<IUser>({
     facebookId: { type: String },
     appleId: { type: String },
     instagramId: { type: String },
-    phoneNumber: { type: String, unique: true },
+    phoneNumber: { type: String },
     name: { type: String, required: true },
     email: { type: String, unique: true },
     age: { type: Number },

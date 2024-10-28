@@ -4,10 +4,7 @@ import { isAuthenticated } from '../controllers/authController';
 const router = Router();
 
 router.get('/profile', isAuthenticated, (req: Request, res: Response) => {
-    res.json({
-        success: true,
-        user: req.user,
-    });
+    res.send({ user: req.user })
 })
 
 export default router;

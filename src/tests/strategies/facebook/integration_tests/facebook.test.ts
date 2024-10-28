@@ -1,7 +1,6 @@
 import request from 'supertest';
 import app from '../../../../app';
-import mongoose from 'mongoose';
-import User, { IUser } from '../../../../models/User';
+
 
 describe('Facebook Routes', () => {
 

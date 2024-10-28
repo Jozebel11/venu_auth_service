@@ -7,7 +7,7 @@ import authRouter from './routes/auth';
 import './config/passport';
 import './strategies/otpStrategy';
 import redisClient from './utils/redisClient';
-import RedisStore from "connect-redis"
+import { redisSession } from './middleware/sessionMiddleware'
 
 
 
@@ -19,31 +19,25 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+redisClient.on('error', (err) => {
+    console.error('Redis error:', err);
+});
 
-app.use(
-    session({
-        store: new RedisStore({
-            client: redisClient,
-        }),
-        secret: process.env.SESSION_SECRET || 'your_session_secret',
-        resave: false,
-        saveUninitialized: false,
-        cookie: {
-            maxAge: 1000 * 60 * 60 * 24 * 90, // 90 days
-            secure: process.env.NODE_ENV === 'production', // HTTPS in production
-            httpOnly: true,
-            sameSite: 'lax',
-        },
-    })
-);
 
+const sessionMiddleware = session(redisSession);
 
 app.use(passport.initialize());
-app.use(passport.session());
 
-app.use('/auth', authRouter);
+app.use('/auth', sessionMiddleware, passport.session(), authRouter);
 
-app.use('/', restrictedRoutes);
+app.use('/restricted', sessionMiddleware, passport.session(), restrictedRoutes);
+
+app.use((req, res, next) => {
+    console.log('Session:', req.session);
+    console.log('User:', req.user);
+    console.log('Authenticated:', req.isAuthenticated());
+    next();
+});
 
 app.get('/', (req: Request, res: Response) => {
     res.send('Welcome to the Auth Service');
